@@ -1,0 +1,22 @@
+services:
+  game:
+    image: ghcr.io/${GITHUB_REPOSITORY:-your-org/fantasy-idle-rpg}:${IMAGE_TAG:-latest}
+    ports:
+      - "8080:80"
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 128M
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
